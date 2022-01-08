@@ -1,5 +1,6 @@
 # HonestClock
 HonestClock is an application that helps you to track your screen time wisely.
+With the help of this App, you can observe your screen usage of all apps by Graphical Repersentation.
 
 ## Progress Till Now
 We have Developed the Front-End Part Completly and Working on the Back-End and Database of Application.
