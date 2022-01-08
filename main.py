@@ -17,10 +17,10 @@ from kivy.core.window import Window
 from kivy.lang import Builder
 from os import mkdir, chdir, startfile, getcwd, listdir, remove
 from datetime import date, datetime
+from sqlite3 import connect
 
 
-
-code='''
+code1='''
 ScreenManager:
 	OptionScreen:
     RMode1Screen:
@@ -63,6 +63,7 @@ ScreenManager:
 <RMode1Screen>:
 
     name:'rmode1'
+
     nm:nm
     scrt:scrt
 
@@ -105,7 +106,10 @@ ScreenManager:
                         MDRectangleFlatButton:
                             text: "Register"
                             pos_hint:{'center_x':0.5}
-                            on_release: root.reg()
+                            on_release:
+                                root.reg()
+                                app.root.current = 'app'
+                                root.manager.transition.direction = 'up'
 
                         MDRectangleFlatButton:
                             text: "Back"
@@ -119,6 +123,10 @@ ScreenManager:
 <RMode2Screen>:
 
     name:'rmode2'
+
+    nm:nm
+    email:email
+    scrt:scrt
 
     MDNavigationLayout:
 
@@ -166,7 +174,10 @@ ScreenManager:
                         MDRectangleFlatButton:
                             text: "Register"
                             pos_hint:{'center_x':0.5}
-                            on_release: root.reg()
+                            on_release: 
+                                root.reg()
+                                app.root.current = 'app'
+                                root.manager.transition.direction = 'up'
 
                         MDRectangleFlatButton:
                             text: "Back"
@@ -176,6 +187,342 @@ ScreenManager:
                                 root.manager.transition.direction = 'down'
 
                         Widget:
+<AppScreen>:
+
+    name:'app'
+
+    MDNavigationLayout:
+
+        ScreenManager:
+			Screen:
+
+                MDGridLayout:
+                    cols:1
+
+                    MDToolbar:
+                        title: "HonestClock"
+                        elevation: 10
+                        left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
+
+                    Widget:
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        spacing: 15
+
+                    Widget:
+
+                    MDBottomAppBar:
+                        MDToolbar:
+                            icon: 'clock'
+                            type: 'bottom'
+                            mode: 'end'
+                            on_action_button:
+                                app.root.current = 'data'
+                                root.manager.transition.direction = 'up'
+
+        MDNavigationDrawer:
+            id: nav_drawer
+
+            MDBoxLayout:
+                orientation: 'vertical'
+                spacing: 25
+                padding: 30
+
+                Widget:
+
+                MDFlatButton:
+                    text: "Apps  "
+
+                MDRaisedButton:
+                    text: "About"
+                    on_release:
+                        app.root.current = 'about'
+                        root.manager.transition.direction = 'up'
+
+                Widget:
+
+<DataScreen>:
+
+    name: 'data'
+
+    MDNavigationLayout:
+
+        ScreenManager:
+			Screen:
+
+                MDGridLayout:
+                    cols:1
+
+                    MDToolbar:
+                        title: "HonestClock"
+                        elevation: 10
+                        left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
+
+                    Widget:
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        spacing: 15
+
+                    Widget:
+
+                    MDBottomAppBar:
+                        MDToolbar:
+                            icon: 'clock'
+                            type: 'bottom'
+                            mode: 'end'
+
+        MDNavigationDrawer:
+            id: nav_drawer
+
+            MDBoxLayout:
+                orientation: 'vertical'
+                spacing: 25
+                padding: 30
+
+                Widget:
+
+                MDRaisedButton:
+                    text: "Apps  "
+                    on_release:
+                        app.root.current = 'app'
+                        root.manager.transition.direction = 'down'
+
+                MDRaisedButton:
+                    text: "About"
+                    on_release:
+                        app.root.current = 'about'
+                        root.manager.transition.direction = 'up'
+
+                Widget:
+
+<AboutScreen>:
+
+    name: 'about'
+
+    MDNavigationLayout:
+
+        ScreenManager:
+			Screen:
+
+                MDGridLayout:
+                    cols:1
+
+                    MDToolbar:
+                        title: "HonestClock"
+                        elevation: 10
+                        left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
+
+                    Widget:
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        spacing: 15
+
+                    Widget:
+
+                    MDBottomAppBar:
+                        MDToolbar:
+                            icon: 'clock'
+                            type: 'bottom'
+                            mode: 'end'
+                            on_action_button:
+                                app.root.current = 'data'
+                                root.manager.transition.direction = 'up'
+
+        MDNavigationDrawer:
+            id: nav_drawer
+
+            MDBoxLayout:
+                orientation: 'vertical'
+                spacing: 25
+                padding: 30
+
+                Widget:
+
+                MDRaisedButton:
+                    text: "Apps  "
+                    on_release:
+                        app.root.current = 'app'
+                        root.manager.transition.direction = 'down'
+
+                MDFlatButton:
+                    text: "About"
+
+                Widget:
+'''
+
+code2 = '''
+ScreenManager:
+    AppScreen:
+    DataScreen:
+    AboutScreen:
+
+<AppScreen>:
+
+    name:'app'
+
+    MDNavigationLayout:
+
+        ScreenManager:
+			Screen:
+
+                MDGridLayout:
+                    cols:1
+
+                    MDToolbar:
+                        title: "HonestClock"
+                        elevation: 10
+                        left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
+
+                    Widget:
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        spacing: 15
+
+                    Widget:
+
+                    MDBottomAppBar:
+                        MDToolbar:
+                            icon: 'clock'
+                            type: 'bottom'
+                            mode: 'end'
+                            on_action_button:
+                                app.root.current = 'data'
+                                root.manager.transition.direction = 'up'
+
+        MDNavigationDrawer:
+            id: nav_drawer
+
+            MDBoxLayout:
+                orientation: 'vertical'
+                spacing: 25
+                padding: 30
+
+                Widget:
+
+                MDFlatButton:
+                    text: "Apps  "
+
+                MDRaisedButton:
+                    text: "About"
+                    on_release:
+                        app.root.current = 'about'
+                        root.manager.transition.direction = 'up'
+
+                Widget:
+
+<DataScreen>:
+
+    name: 'data'
+
+    MDNavigationLayout:
+
+        ScreenManager:
+			Screen:
+
+                MDGridLayout:
+                    cols:1
+
+                    MDToolbar:
+                        title: "HonestClock"
+                        elevation: 10
+                        left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
+
+                    Widget:
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        spacing: 15
+
+                    Widget:
+
+                    MDBottomAppBar:
+                        MDToolbar:
+                            icon: 'clock'
+                            type: 'bottom'
+                            mode: 'end'
+
+        MDNavigationDrawer:
+            id: nav_drawer
+
+            MDBoxLayout:
+                orientation: 'vertical'
+                spacing: 25
+                padding: 30
+
+                Widget:
+
+                MDRaisedButton:
+                    text: "Apps  "
+                    on_release:
+                        app.root.current = 'app'
+                        root.manager.transition.direction = 'down'
+
+                MDRaisedButton:
+                    text: "About"
+                    on_release:
+                        app.root.current = 'about'
+                        root.manager.transition.direction = 'up'
+
+                Widget:
+
+<AboutScreen>:
+
+    name: 'about'
+
+    MDNavigationLayout:
+
+        ScreenManager:
+			Screen:
+
+                MDGridLayout:
+                    cols:1
+
+                    MDToolbar:
+                        title: "HonestClock"
+                        elevation: 10
+                        left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
+
+                    Widget:
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        spacing: 15
+
+                    Widget:
+
+                    MDBottomAppBar:
+                        MDToolbar:
+                            icon: 'clock'
+                            type: 'bottom'
+                            mode: 'end'
+                            on_action_button:
+                                app.root.current = 'data'
+                                root.manager.transition.direction = 'up'
+
+        MDNavigationDrawer:
+            id: nav_drawer
+
+            MDBoxLayout:
+                orientation: 'vertical'
+                spacing: 25
+                padding: 30
+
+                Widget:
+
+                MDRaisedButton:
+                    text: "Apps  "
+                    on_release:
+                        app.root.current = 'app'
+                        root.manager.transition.direction = 'down'
+
+                MDFlatButton:
+                    text: "About"
+
+                Widget: 
 '''
 
 class OptionScreen(Screen):
@@ -184,12 +531,65 @@ class OptionScreen(Screen):
 class RMode1Screen(Screen):
     
     def reg(self):
-        pass
+        con = connect('user.db')
+        cur = con.cursor()
+        if len(self.nm.text)>0 and len(self.scrt.text)>0:
+            if self.scrt.text.isnumeric():
+                try:
+                    cur.execute('CREATE TABLE IF NOT EXISTS reg(name TEXT PRIMARY KEY, scrt INTEGER)')
+                    cur.execute(f"INSERT INTO reg VALUES ('{self.nm.text}', {int(self.scrt.text)})")
+                except Exception as e:
+                    dialog = MDDialog (
+                            title = 'Error',
+                            text = str(e)
+                        )
+                    dialog.open()
+            else:
+                dialog = MDDialog (
+                            title = 'Error',
+                            text = "Enter a Numeric Value for Screen Time"
+                        )
+                dialog.open()
+        else:
+            dialog = MDDialog (
+                        title = 'Error',
+                        text = "Text Field Empty"
+                    )
+            dialog.open()
 
 class RMode2Screen(Screen):
     
     def reg(self):
-        pass
+        con = connect('user.db')
+        cur = con.cursor()
+        if len(self.nm.text)>0 and len(self.scrt.text)>0:
+            if self.scrt.text.isnumeric():
+                try:
+                    cur.execute('CREATE TABLE IF NOT EXISTS reg(name TEXT PRIMARY KEY, email TEXT, scrt INTEGER)')
+                    cur.execute(f"INSERT INTO reg VALUES ('{self.nm.text}', '{self.email.text}', {int(self.scrt.text)})")
+                except Exception as e:
+                    dialog = MDDialog (
+                            title = 'Error',
+                            text = str(e)
+                        )
+                    dialog.open()
+            else:
+                dialog = MDDialog (
+                            title = 'Error',
+                            text = "Enter a Numeric Value for Screen Time"
+                        )
+                dialog.open()
+        else:
+            dialog = MDDialog (
+                        title = 'Error',
+                        text = "Text Field Empty"
+                    )
+            dialog.open()
+
+        cur.execute('select * from reg')
+
+        r = cur.fetchall()
+        print(r)
 
 class AppScreen(Screen):
     pass
@@ -211,12 +611,14 @@ sm.add_widget(AboutScreen(name = 'about'))
 
 class HonestClockApp(MDApp):
 
-	def build(self):
-		self.theme_cls = ThemeManager()
-		#self.icon="icon.png"
-		self.theme_cls.primary_palette='Indigo'
-		self.theme_cls.primary_hue='900'
-		self.screen=Builder.load_string(code)
-		return self.screen
+    def build(self):
+        self.theme_cls = ThemeManager()
+        self.theme_cls.primary_palette='DeepPurple'
+        self.theme_cls.primary_hue='900'
+        if 'user.db' in listdir():
+            self.screen=Builder.load_string(code2)
+        else:
+            self.screen=Builder.load_string(code1)
+        return self.screen
 
 HonestClockApp().run()
